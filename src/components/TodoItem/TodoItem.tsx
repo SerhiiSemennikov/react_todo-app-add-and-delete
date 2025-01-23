@@ -31,7 +31,7 @@ export const TodoItem: React.FC<Props> = props => {
       </label>
 
       <span data-cy="TodoTitle" className="todo__title">
-        {todo.title}:{todo.id}
+        {todo.title}
       </span>
       {!isTodoDeleting && (
         <button
