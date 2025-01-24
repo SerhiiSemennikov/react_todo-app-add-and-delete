@@ -13,12 +13,13 @@ type Props = {
 
 export const TodoItem: React.FC<Props> = props => {
   const { todo, onDelete, isTodoLoading, isTodoDeleting, isProcessed } = props;
+  const { title, id } = todo;
 
   return (
     <div
       data-cy="Todo"
       className={classNames('todo', { completed: todo.completed })}
-      key={todo.id}
+      key={id}
     >
       <label className="todo__status-label">
         <input
@@ -31,7 +32,7 @@ export const TodoItem: React.FC<Props> = props => {
       </label>
 
       <span data-cy="TodoTitle" className="todo__title">
-        {todo.title}
+        {title}
       </span>
       {!isTodoDeleting && (
         <button
@@ -39,7 +40,7 @@ export const TodoItem: React.FC<Props> = props => {
           className="todo__remove"
           data-cy="TodoDelete"
           disabled={isTodoLoading || isProcessed}
-          onClick={() => onDelete(todo.id)}
+          onClick={() => onDelete(id)}
         >
           ×
         </button>

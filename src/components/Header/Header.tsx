@@ -33,7 +33,7 @@ export const Header: React.FC<Props> = props => {
     }
   }, [inputRef, isInputDisabled, isTodoLoading]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (errorMessage !== ErrorMessage.Default) {
@@ -49,7 +49,7 @@ export const Header: React.FC<Props> = props => {
     return onAdd(title)
       .then(() => setTitle(''))
       .catch(() => {});
-  }
+  };
 
   return (
     <header className="todoapp__header">
