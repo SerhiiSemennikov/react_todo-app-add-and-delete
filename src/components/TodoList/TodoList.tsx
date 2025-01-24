@@ -21,14 +21,14 @@ export const TodoList: React.FC<Props> = props => {
     onDelete,
     isTodoLoading,
     isTodoDeleting,
-    creatingTodo,
+    //creatingTodo,
     processings,
   } = props;
 
   return (
     <section className="todoapp__main" data-cy="TodoList">
       <TransitionGroup>
-        {!creatingTodo &&
+        {todos &&
           todos.map(todo => (
             <CSSTransition key={todo.id} timeout={3000} classNames="item">
               <TodoItem

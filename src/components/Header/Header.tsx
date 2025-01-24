@@ -31,7 +31,7 @@ export const Header: React.FC<Props> = props => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef, isInputDisabled, isTodoLoading]);
+  }, [inputRef, isTodoLoading, onAdd]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,8 +66,8 @@ export const Header: React.FC<Props> = props => {
           placeholder="What needs to be done?"
           value={title}
           onChange={event => setTitle(event.target.value)}
-          disabled={isInputDisabled || isTodoLoading}
-          //autoFocus
+          ref={inputRef}
+          disabled={isInputDisabled}
         />
       </form>
     </header>

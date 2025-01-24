@@ -89,7 +89,7 @@ export const App: React.FC = () => {
         setErrorMessage(ErrorMessage.UnableToLoad);
         setTimeout(() => {
           setErrorMessage(errorMessage);
-        }, 100);
+        }, 3000);
       })
       .finally(() => setIsTodoLoading(false));
   }, [errorMessage]);
