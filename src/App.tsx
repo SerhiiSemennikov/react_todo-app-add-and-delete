@@ -52,9 +52,8 @@ export const App: React.FC = () => {
         throw err;
       }
     } finally {
+      setTempTodo(null);
       setCreatingTodo(false);
-
-      return setTempTodo(null);
     }
   };
 

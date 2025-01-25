@@ -9,17 +9,26 @@ type Props = {
   isTodoLoading: boolean;
   isTodoDeleting: boolean;
   isProcessed: boolean;
+  creatingTodo: boolean;
 };
 
 export const TodoItem: React.FC<Props> = props => {
-  const { todo, onDelete, isTodoLoading, isTodoDeleting, isProcessed } = props;
+  const {
+    todo,
+    onDelete,
+    isTodoLoading,
+    isTodoDeleting,
+    isProcessed,
+    creatingTodo,
+  } = props;
   const { title, id } = todo;
 
   return (
     <div
       data-cy="Todo"
-      className={classNames('todo', { completed: todo.completed })}
-      key={id}
+      className={classNames('todo', 'item-enter-done', {
+        completed: todo.completed,
+      })}
     >
       <label className="todo__status-label">
         <input
@@ -45,13 +54,17 @@ export const TodoItem: React.FC<Props> = props => {
           ×
         </button>
       )}
-      <div
-        data-cy="TodoLoader"
-        className={classNames('modal overlay', { 'is-active': isTodoLoading })}
-      >
-        <div className="modal-background has-background-white-ter" />
-        <div className="loader" />
-      </div>
+      {(id === 0 || isProcessed) && (
+        <div
+          data-cy="TodoLoader"
+          className={classNames('modal overlay', {
+            'is-active': creatingTodo || isProcessed,
+          })}
+        >
+          <div className="modal-background has-background-white-ter" />
+          <div className="loader" />
+        </div>
+      )}
     </div>
   );
 };

@@ -21,7 +21,7 @@ export const TodoList: React.FC<Props> = props => {
     onDelete,
     isTodoLoading,
     isTodoDeleting,
-    //creatingTodo,
+    creatingTodo,
     processings,
   } = props;
 
@@ -30,11 +30,12 @@ export const TodoList: React.FC<Props> = props => {
       <TransitionGroup>
         {todos &&
           todos.map(todo => (
-            <CSSTransition key={todo.id} timeout={3000} classNames="item">
+            <CSSTransition key={todo.id} timeout={300} classNames="item">
               <TodoItem
                 key={todo.id}
                 todo={todo}
                 onDelete={onDelete}
+                creatingTodo={creatingTodo}
                 isTodoLoading={isTodoLoading}
                 isTodoDeleting={isTodoDeleting}
                 isProcessed={processings.includes(todo.id)}
@@ -43,10 +44,11 @@ export const TodoList: React.FC<Props> = props => {
           ))}
 
         {tempTodo && (
-          <CSSTransition key={0} timeout={3000} classNames="temp-item">
+          <CSSTransition key={0} timeout={300} classNames="temp-item">
             <TodoItem
               todo={tempTodo}
               onDelete={() => {}}
+              creatingTodo={creatingTodo}
               isTodoLoading={isTodoLoading}
               isTodoDeleting={isTodoDeleting}
               isProcessed={processings.includes(tempTodo.id)}
