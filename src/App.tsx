@@ -139,15 +139,15 @@ export const App: React.FC = () => {
               todos={todos}
               onDeleteAllCompleted={onDeleteAllCompleted}
             />
-            {errorMessage && (
-              <ErrorNotification
-                errorMessage={errorMessage}
-                setErrorMessage={setErrorMessage}
-              />
-            )}
           </>
         )}
       </div>
+      {errorMessage && (
+        <ErrorNotification
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
+      )}
     </div>
   );
 };
