@@ -5,6 +5,7 @@ import React from 'react';
 
 type Props = {
   todo: Todo;
+  //tempTodo: Todo | null;
   onDelete: (todoId: number) => void;
   isTodoLoading: boolean;
   isTodoDeleting: boolean;
@@ -15,11 +16,12 @@ type Props = {
 export const TodoItem: React.FC<Props> = props => {
   const {
     todo,
+    //tempTodo,
     onDelete,
     isTodoLoading,
     isTodoDeleting,
     isProcessed,
-    creatingTodo,
+    //creatingTodo,
   } = props;
   const { title, id } = todo;
 
@@ -54,17 +56,17 @@ export const TodoItem: React.FC<Props> = props => {
           ×
         </button>
       )}
-      {(id === 0 || isProcessed) && (
-        <div
-          data-cy="TodoLoader"
-          className={classNames('modal overlay', {
-            'is-active': creatingTodo || isProcessed,
-          })}
-        >
-          <div className="modal-background has-background-white-ter" />
-          <div className="loader" />
-        </div>
-      )}
+      {/*{(id === 0 || isProcessed) && (*/}
+      <div
+        data-cy="TodoLoader"
+        className={classNames('modal overlay', {
+          'is-active': isProcessed || id === 0,
+        })}
+      >
+        <div className="modal-background has-background-white-ter" />
+        <div className="loader" />
+      </div>
+      {/*})}*/}
     </div>
   );
 };

@@ -28,16 +28,24 @@ export const App: React.FC = () => {
   const [creatingTodo, setCreatingTodo] = useState(false);
 
   const onAdd = async (title: string) => {
+    if (title.trim() === '') {
+      setErrorMessage(ErrorMessage.EmptyTitle);
+
+      return;
+    }
+
     setCreatingTodo(true);
+    const trimmedTodoTitle = title.trim();
+
     setTempTodo({
       id: 0,
-      title,
+      title: trimmedTodoTitle,
       userId: USER_ID,
       completed: false,
     });
 
     const newTodo: Omit<Todo, 'id'> = {
-      title,
+      title: trimmedTodoTitle,
       userId: USER_ID,
       completed: false,
     };
@@ -86,11 +94,13 @@ export const App: React.FC = () => {
       .then(setTodos)
       .catch(() => {
         setErrorMessage(ErrorMessage.UnableToLoad);
-        setTimeout(() => {
-          setErrorMessage(errorMessage);
-        }, 3000);
+        //setTimeout(() => {
+        //setErrorMessage(errorMessage);
+        //}, 3000);
       })
-      .finally(() => setIsTodoLoading(false));
+      .finally(() => {
+        setIsTodoLoading(false);
+      });
   }, [errorMessage]);
 
   if (!USER_ID) {
