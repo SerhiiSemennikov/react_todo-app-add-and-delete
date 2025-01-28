@@ -11,6 +11,7 @@ type Props = {
   setErrorMessage: (error: ErrorMessage) => void;
   isInputDisabled: boolean;
   isTodoLoading: boolean;
+  toggleAllTodos: () => void;
 };
 
 export const Header: React.FC<Props> = props => {
@@ -22,6 +23,7 @@ export const Header: React.FC<Props> = props => {
     inputRef,
     isInputDisabled,
     isTodoLoading,
+    toggleAllTodos,
   } = props;
 
   const allTodoCompleted = todos.every(todo => todo.completed);
@@ -57,6 +59,7 @@ export const Header: React.FC<Props> = props => {
         type="button"
         className={cn('todoapp__toggle-all', { active: allTodoCompleted })}
         data-cy="ToggleAllButton"
+        onClick={toggleAllTodos}
       />
       <form onSubmit={handleSubmit}>
         <input

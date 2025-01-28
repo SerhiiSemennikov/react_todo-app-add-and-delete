@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
-import { createTodo, deleteTodo, USER_ID } from './api/todos';
+import { createTodo, deleteTodo, updateTodo, USER_ID } from './api/todos';
 import { getTodos } from './api/todos';
 
 import { Filter } from './types/FilterType';
@@ -50,7 +50,7 @@ export const App: React.FC = () => {
       completed: false,
     };
 
-    try {
+    /*try {
       try {
         const todo = await createTodo(newTodo);
 
@@ -59,6 +59,14 @@ export const App: React.FC = () => {
         setErrorMessage(ErrorMessage.UnableToAdd);
         throw err;
       }
+    }*/
+    try {
+      const todo = await createTodo(newTodo);
+
+      setTodos(currentTodos => [...currentTodos, todo]);
+    } catch (err) {
+      setErrorMessage(ErrorMessage.UnableToAdd);
+      throw err;
     } finally {
       setTempTodo(null);
       setCreatingTodo(false);
@@ -88,15 +96,49 @@ export const App: React.FC = () => {
     completedTodos.forEach(todo => onDelete(todo.id));
   };
 
+  const toggleAllTodos = async () => {
+    if (isTodoLoading) {
+      return;
+    }
+
+    const areAllCompleted = todos.every(todo => todo.completed);
+    //const newCompletedStatus = !areAllCompleted;
+
+    const todosToUpdate = todos.filter(
+      todo => todo.completed !== !areAllCompleted,
+    );
+
+    setIsTodoLoading(true);
+
+    try {
+      await Promise.all(
+        todosToUpdate.map(async todo => {
+          await updateTodo(todo.id, { completed: !areAllCompleted });
+        }),
+      );
+
+      setTodos(currentTodos =>
+        currentTodos.map(todo => ({
+          ...todo,
+          completed: !areAllCompleted,
+        })),
+      );
+    } catch {
+      setErrorMessage(ErrorMessage.UnableToUpdate);
+    } finally {
+      setIsTodoLoading(false);
+    }
+  };
+
   useEffect(() => {
     setIsTodoLoading(true);
     getTodos()
       .then(setTodos)
       .catch(() => {
         setErrorMessage(ErrorMessage.UnableToLoad);
-        //setTimeout(() => {
-        //setErrorMessage(errorMessage);
-        //}, 3000);
+        setTimeout(() => {
+          setErrorMessage(errorMessage);
+        }, 3000);
       })
       .finally(() => {
         setIsTodoLoading(false);
@@ -130,6 +172,7 @@ export const App: React.FC = () => {
           inputRef={inputRef}
           isInputDisabled={!!tempTodo}
           isTodoLoading={isTodoLoading}
+          toggleAllTodos={toggleAllTodos}
         />
 
         {todos.length > 0 && (
