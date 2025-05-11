@@ -11,28 +11,31 @@ function wait(delay: number) {
 // To have autocompletion and avoid mistypes
 type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
-async function request<T>(
+function request<T>(
   url: string,
   method: RequestMethod = 'GET',
-  data: any = null,
+  data: any = null, // we can send any data to the server
 ): Promise<T> {
   const options: RequestInit = { method };
 
   if (data) {
+    // We add body and Content-Type only for the requests with data
     options.body = JSON.stringify(data);
     options.headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
   }
 
-  await wait(1000);
-  const response = await fetch(BASE_URL + url, options);
+  // DON'T change the delay it is required for tests
+  return wait(100)
+    .then(() => fetch(BASE_URL + url, options))
+    .then(response => {
+      if (!response.ok) {
+        throw new Error();
+      }
 
-  if (!response.ok) {
-    throw new Error();
-  }
-
-  return response.json();
+      return response.json();
+    });
 }
 
 export const client = {

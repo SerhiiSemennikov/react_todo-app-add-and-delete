@@ -1,46 +1,53 @@
-import React from 'react';
-import { Filter } from '../../types/FilterType';
-import classNames from 'classnames';
-import { Todo } from '../../types/Todo';
+/* eslint-disable prettier/prettier */
+import cn from 'classnames';
+
+import { Filter as Status } from '../../types/FilterType';
 
 type Props = {
-  filterField: Filter;
-  setFilteredField: React.Dispatch<React.SetStateAction<Filter>>;
-  todos: Todo[];
+  notCompletedTodos: number;
+  activeStatus: Status;
+  setActiveStatus: (status: Status) => void;
+  completedTodos: number;
   onDeleteAllCompleted: () => void;
 };
 
-export const Footer: React.FC<Props> = props => {
-  const { filterField, setFilteredField, todos, onDeleteAllCompleted } = props;
-  const activeTodosCount = todos.filter(todo => !todo.completed).length;
+export const TodoFooter: React.FC<Props> = props => {
+  const {
+    notCompletedTodos,
+    activeStatus,
+    setActiveStatus,
+    completedTodos,
+    onDeleteAllCompleted,
+  } = props;
 
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
-        {activeTodosCount} items left
+        {notCompletedTodos} items left
       </span>
 
       <nav className="filter" data-cy="Filter">
-        {Object.values(Filter).map(value => (
+        {Object.values(Status).map(status => (
           <a
-            key={value}
-            href={`#/${value}`}
-            className={classNames('filter__link', {
-              selected: filterField === value,
+            key={status}
+            data-cy={`FilterLink${status}`}
+            href={status === 'All' ? '#/' : `#/${status.toLowerCase()}`}
+            className={cn('filter__link', {
+              selected: activeStatus === status,
             })}
-            data-cy={`FilterLink${value}`}
-            onClick={() => setFilteredField(value)}
+            onClick={() => setActiveStatus(status)}
           >
-            {value}
+            {status}
           </a>
         ))}
       </nav>
 
+      {/* this button should be disabled if there are no completed todos */}
       <button
         type="button"
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
-        disabled={todos.every(todo => !todo.completed)}
+        disabled={completedTodos === 0}
         onClick={onDeleteAllCompleted}
       >
         Clear completed

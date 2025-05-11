@@ -1,32 +1,36 @@
-import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import classnames from 'classnames';
+import { useEffect } from 'react';
 import { ErrorMessage } from '../../types/ErrorMessage';
 
 type Props = {
-  errorMessage: ErrorMessage;
-  setErrorMessage: (errorMessage: ErrorMessage) => void;
+  errorMessage: string;
+  setErrorMessage: (error: ErrorMessage) => void;
 };
 
 export const ErrorNotification: React.FC<Props> = props => {
   const { errorMessage, setErrorMessage } = props;
 
   useEffect(() => {
-    if (!errorMessage) {
+    if (errorMessage === ErrorMessage.Default) {
       return;
     }
 
-    const timer = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setErrorMessage(ErrorMessage.Default);
     }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [errorMessage, setErrorMessage]);
 
   return (
     <div
       data-cy="ErrorNotification"
-      className={classNames(
-        'notification is-danger is-light has-text-weight-normal',
+      className={classnames(
+        'notification',
+        'is-danger',
+        'is-light has-text-weight-normal',
         { hidden: !errorMessage },
       )}
     >

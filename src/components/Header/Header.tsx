@@ -1,75 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { Todo } from '../../types/Todo';
-import cn from 'classnames';
+import { useEffect, useState } from 'react';
 import { ErrorMessage } from '../../types/ErrorMessage';
 
 type Props = {
-  todos: Todo[];
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
-  onAdd: (title: string) => Promise<void>;
-  errorMessage: ErrorMessage;
+  onAddTodo: (title: string) => Promise<void>;
+  error: ErrorMessage;
   setErrorMessage: (error: ErrorMessage) => void;
   isInputDisabled: boolean;
-  isTodoLoading: boolean;
-  toggleAllTodos: () => void;
+  isDeletedTodos: number[];
 };
 
-export const Header: React.FC<Props> = props => {
+export const TodoHeader: React.FC<Props> = props => {
   const {
-    todos,
-    onAdd,
-    errorMessage,
-    setErrorMessage,
     inputRef,
+    onAddTodo,
+    error,
+    setErrorMessage,
     isInputDisabled,
-    isTodoLoading,
-    toggleAllTodos,
+    isDeletedTodos,
   } = props;
 
-  const allTodoCompleted = todos.every(todo => todo.completed);
   const [title, setTitle] = useState('');
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [inputRef, isTodoLoading, onAdd]);
+  }, [inputRef, isInputDisabled, isDeletedTodos]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (errorMessage !== ErrorMessage.Default) {
+    if (error !== ErrorMessage.Default) {
       setErrorMessage(ErrorMessage.Default);
     }
 
-    if (!title) {
+    if (!title.trim()) {
       setErrorMessage(ErrorMessage.EmptyTitle);
 
       return;
     }
 
-    return onAdd(title)
+    return onAddTodo(title.trim())
       .then(() => setTitle(''))
       .catch(() => {});
   };
 
   return (
     <header className="todoapp__header">
+      {/* this button should have `active` class only if all todos are completed */}
       <button
         type="button"
-        className={cn('todoapp__toggle-all', { active: allTodoCompleted })}
+        className="todoapp__toggle-all active"
         data-cy="ToggleAllButton"
-        onClick={toggleAllTodos}
       />
+
       <form onSubmit={handleSubmit}>
         <input
           data-cy="NewTodoField"
           type="text"
           className="todoapp__new-todo"
           placeholder="What needs to be done?"
+          ref={inputRef}
           value={title}
           onChange={event => setTitle(event.target.value)}
-          ref={inputRef}
           disabled={isInputDisabled}
         />
       </form>
